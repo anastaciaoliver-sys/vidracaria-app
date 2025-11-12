@@ -1,4 +1,4 @@
-App criado para uma vidraria
+App criado para uma vidraçaria
 
 Foi realizada uma entrevista com o cliente para entender as necessidades do cliente. O mesmo desejava organizar seus pedidos e divulgar seu trabalho para aumentar seu faturamento. Para o aplicativo solicitado:
 
