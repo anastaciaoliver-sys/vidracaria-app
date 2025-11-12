@@ -1,18 +1,44 @@
+/**
+ * Tela Home do app:
+ * - Mostra cards de serviços (cada um leva para uma galeria)
+ * - Possui um formulário de orçamento (nome, telefone, endereço, descrição)
+ * - Envia os dados por WhatsApp ou E-mail
+ * - Salva cada orçamento no SQLite (Android/iOS) e simula no Web
+ */
 import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { Alert, Image, Linking, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { initDB, salvarOrcamento } from '../../lib/db';
 
+// Estados do formulário (inputs controlados)
 export default function HomeScreen() {
   const [nome, setNome] = useState('');
   const [telefone, setTelefone] = useState('');
   const [endereco, setEndereco] = useState('');
   const [descricao, setDescricao] = useState('');
 
+    /**
+   * useEffect:
+   * - Executa ao montar a tela
+   * - Garante que a tabela do banco exista (ou cria se não existir)
+   */
   useEffect(() => { initDB(); }, []);
+
+  /**
+   * simularValor:
+   * - Gera um valor de orçamento fictício (R$ 100 a R$ 500)
+   * - Apenas para demonstração/estimativa rápida
+   */
   const simularValor = () => Math.floor(Math.random() * (500 - 100 + 1)) + 100;
 
+  /**
+   * enviarWhatsApp:
+   * - Valida campos essenciais
+   * - Gera valor simulado
+   * - Salva no banco (SQLite em mobile, simulação no web)
+   * - Abre o WhatsApp com a mensagem preenchida
+   */
   const enviarWhatsApp = async () => {
     if (!nome || !telefone || !descricao) {
       Alert.alert('Atenção', 'Preencha ao menos Nome, Telefone e Descrição.');
@@ -33,6 +59,13 @@ export default function HomeScreen() {
     Linking.openURL(`https://wa.me/${telEmpresa}?text=${mensagem}`);
   };
 
+  /**
+   * enviarEmail:
+   * - Valida campos essenciais
+   * - Gera valor simulado
+   * - Salva no banco
+   * - Abre o cliente de e-mail com assunto/corpo preenchidos
+   */
   const enviarEmail = async () => {
     if (!nome || !telefone || !descricao) {
       Alert.alert('Atenção', 'Preencha ao menos Nome, Telefone e Descrição.');
@@ -60,6 +93,13 @@ Valor estimado: R$ ${valor},00`;
       <ScrollView style={styles.scroll} contentContainerStyle={{ paddingBottom: 32 }}>
         <Text style={styles.sectionTitle}>Nossos Serviços</Text>
 
+  {/* 
+          SERVIÇOS — As imagens abaixo já estão TROCADAS:
+          Opção A (links diretos): use 'uri' com URLs suas (site, imgbb, etc.)
+          Opção B (arquivos locais): use require('../../assets/servicos/arquivo.jpg')
+          → Veja nota "Como trocar imagens" mais abaixo
+        */}
+  
         <Link href="/servicos/box" asChild>
           <TouchableOpacity style={styles.card}>
             <Image source={{ uri: 'https://picsum.photos/seed/box/600/350' }} style={styles.image} />
@@ -113,6 +153,7 @@ Valor estimado: R$ ${valor},00`;
   );
 }
 
+/** Estilos visuais da tela */
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f5f5f5', paddingTop: 50 },
   header: { fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 20, color: '#0077b6' },
